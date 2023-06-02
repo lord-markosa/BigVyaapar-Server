@@ -1,33 +1,59 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../../models/User";
-import IError from "../../Schema/IError";
-import jwt from "jsonwebtoken";
+import IError from "../../schema/error/IError";
+import { secretString } from "../../constants";
+import IAuthResponse from "../../schema/response/IAuthResponse";
+import Status from "../../schema/response/Status";
+import IErrorType from "../../schema/error/IErrorType";
 
 const login: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const error: IError = new Error("Validation Failed");
-            error.statusCode = 422;
-            error.data = errors.array();
+            const error: IError = {
+                ...new Error(),
+                description: "Validation Failed",
+                status: Status.Failed,
+                errorType: IErrorType.Validation,
+                statusCode: 422,
+                data: errors.array(),
+            };
+
             throw error;
         }
+
         const { phoneNumber, password } = req.body;
-        const user = await User.findOne({ phoneNumber });
+        const user = await User.findOne({
+            phoneNumber: phoneNumber.substr(phoneNumber.length - 10),
+        });
+
         if (!user) {
-            const error: IError = new Error(
-                "A user with this phone number could not found"
-            );
-            error.statusCode = 401;
+            const error: IError = {
+                ...new Error(),
+                description: "Phone Number not found",
+                status: Status.Failed,
+                errorType: IErrorType.InvalidCred,
+                statusCode: 401,
+                data: [{ path: "phoneNumber" }],
+            };
+
             throw error;
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            const error: IError = new Error("Wrong password");
-            error.statusCode = 401;
+            const error: IError = {
+                ...new Error(),
+                description: "Invalid password",
+                status: Status.Failed,
+                errorType: IErrorType.InvalidCred,
+                statusCode: 401,
+                data: [{ path: "password" }],
+            };
+
             throw error;
         }
 
@@ -37,19 +63,33 @@ const login: RequestHandler = async (req, res, next) => {
                 userName: user.name,
                 phoneNumber,
             },
-            "secretString",
-            { expiresIn: "1h" }
+            secretString,
+            { expiresIn: "12h" }
         );
 
-        res.status(200).json({
+        const response: IAuthResponse = {
+            status: Status.Success,
+            message: "Logged in successfully",
             token,
-            userId: user._id.toString,
-        });
+            user: { name: user.name, phoneNumber, userId: user._id.toString() },
+        };
+
+        res.status(200).json(response);
     } catch (err) {
         if (!(err as IError).statusCode) {
-            (err as IError).statusCode = 500;
+            const newError: IError = {
+                ...new Error(),
+                description: "Error in login in handler",
+                status: Status.Failed,
+                errorType: IErrorType.ServerError,
+                statusCode: 500,
+                data: null,
+            };
+            console.log(newError);
+            next(newError);
+        } else {
+            next(err);
         }
-        next(err);
     }
 };
 

@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Product from "../../models/Product";
-import IError from "../../Schema/IError";
-import IProduct from "../../Schema/IProduct";
-import IRequest from "../../Schema/IRequest";
+import IError from "../../schema/error/IError";
+import IProduct from "../../schema/IProduct";
+import IRequest from "../../schema/IRequest";
 
 const updateProduct: RequestHandler = async (req, res, next) => {
     try {

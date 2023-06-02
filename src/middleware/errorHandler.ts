@@ -1,10 +1,7 @@
 import { ErrorRequestHandler } from "express";
-import IError from "../Schema/IError";
+import IErrorResponse from "../schema/error/IErrorResponse";
 
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
-    const statusCode = (error as IError).statusCode || 500;
-    const message = error.message;
-    const data = (error as IError).data;
-    res.status(statusCode).json({ message, data });
+    res.status(error.statusCode).json(error as IErrorResponse);
 };
 export default errorHandler;

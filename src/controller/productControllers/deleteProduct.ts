@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import Product from "../../models/Product";
-import IError from "../../Schema/IError";
-import IRequest from "../../Schema/IRequest";
+import IError from "../../schema/error/IError";
+import IRequest from "../../schema/IRequest";
 
 const deleteProduct: RequestHandler = async (req, res, next) => {
     try {
