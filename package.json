@@ -6,8 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node lib/server",
-        "fast": "nodemon lib/server",
-        "build": "tsc"
+        "fast": "nodemon lib/server"
     },
     "author": "",
     "license": "ISC",
