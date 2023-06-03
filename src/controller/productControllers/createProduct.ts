@@ -2,35 +2,57 @@ import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Product from "../../models/Product";
 import IError from "../../schema/error/IError";
+import IErrorType from "../../schema/error/IErrorType";
 import IProduct from "../../schema/IProduct";
-import IRequest from "../../schema/IRequest";
+import IRequest from "../../schema/requests/IRequest";
+import IProductResponse from "../../schema/response/product/IProductResponse";
+import Status from "../../schema/response/Status";
+import createError from "../../utils/createError";
 
 const createProduct: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const error: IError = new Error("Validation Failed");
-            error.statusCode = 422;
-            error.data = errors.array();
-            throw error;
+            throw createError(
+                "Validation Failed",
+                IErrorType.Validation,
+                422,
+                errors.array()
+            );
         }
 
         const productBody: IProduct = {
             ...req.body,
+            trades: [],
             userId: (req as IRequest).user.userId,
         };
-        const product = new Product(productBody);
 
+        const product = new Product(productBody);
         await product.save();
-        res.status(201).json({
-            message: "Product created successfully",
-            product,
-        });
+
+        const response: IProductResponse = {
+            status: Status.Success,
+            message: " Product created",
+            product: {
+                productId: product._id.toString(),
+                name: product.name,
+                description: product.description,
+                price: product.price,
+            },
+        };
+
+        res.status(201).json(response);
     } catch (err) {
         if (!(err as IError).statusCode) {
-            (err as IError).statusCode = 500;
+            const newError = createError(
+                "Error in create product handler",
+                IErrorType.ServerError,
+                500
+            );
+            next(newError);
+        } else {
+            next(err);
         }
-        next(err);
     }
 };
 

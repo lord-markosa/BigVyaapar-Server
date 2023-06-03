@@ -1,5 +1,5 @@
 import IUserResponse from "./IUserResponse";
-import Status from "./Status";
+import Status from "../Status";
 
 interface IAuthResponse {
     status: Status;

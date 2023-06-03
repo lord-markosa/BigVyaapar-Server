@@ -22,7 +22,7 @@
 
     -   POST
     -   Headers: Authorization: token
-    -   body : {category, quantity, price, address, description}
+    -   body : {name, price, description}
     -   registers a new product
 
 -   base/product/update/:productId
@@ -33,8 +33,25 @@
     -   updates the product
 
 -   base/product/delete/:productId
+
     -   DELETE
     -   Headers: AUthorization: token
     -   deleted the product
+
+-   base/trade/new
+
+    -   POST
+    -   Headers: Authorization: token
+    -   body : {price, quantity, type, address}
+    -   registers a new product
+
+-   base/trade/update/:tradeId
+
+    -   POST
+    -   Headers: Authorization: token
+    -   body : {price, quantity, type, address}
+    -   registers a new product
+
+-   base/trade/delete
 
 NOTE: base is the base url

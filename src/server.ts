@@ -6,6 +6,7 @@ import helmet from "helmet";
 import productRoutes from "./routes/productRoutes";
 import defaultRoute from "./routes/defaultRoute";
 import authRoutes from "./routes/authRoutes";
+import tradeRoutes from "./routes/tradeRoutes";
 import errorHandler from "./middleware/errorHandler";
 import setHeaderConfig from "./middleware/setHeaderConfig";
 import { mongodbUser, mongodbPass, port } from "./constants";
@@ -18,6 +19,7 @@ app.use(setHeaderConfig);
 app.use(bodyParser.json());
 app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
+app.use("/trade", tradeRoutes);
 app.use("/", defaultRoute);
 app.use(errorHandler);
 

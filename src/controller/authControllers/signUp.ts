@@ -5,31 +5,29 @@ import bcrypt from "bcrypt";
 import User from "../../models/User";
 import IError from "../../schema/error/IError";
 import { secretString } from "../../constants";
-import IAuthResponse from "../../schema/response/IAuthResponse";
+import IAuthResponse from "../../schema/response/auth/IAuthResponse";
 import Status from "../../schema/response/Status";
 import IErrorType from "../../schema/error/IErrorType";
+import createError from "../../utils/createError";
 
 const signUp: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const error: IError = {
-                ...new Error(),
-                description: "Validation Failed",
-                status: Status.Failed,
-                errorType: IErrorType.Validation,
-                statusCode: 422,
-                data: errors.array(),
-            };
-
-            throw error;
+            throw createError(
+                "Validation Failed",
+                IErrorType.Validation,
+                422,
+                errors.array()
+            );
         }
-        const { phoneNumber, name, password } = req.body;
+        const { phoneNumber, name, password, gstin } = req.body;
         const hashedPassword = await bcrypt.hash(password, 12);
         const user = new User({
             name,
             phoneNumber: phoneNumber.substr(phoneNumber.length - 10),
             password: hashedPassword,
+            gstin,
         });
 
         await user.save();
@@ -54,15 +52,11 @@ const signUp: RequestHandler = async (req, res, next) => {
         res.status(201).json(response);
     } catch (err) {
         if (!(err as IError).statusCode) {
-            const newError: IError = {
-                ...new Error(),
-                description: "Error in sign up handler",
-                status: Status.Failed,
-                errorType: IErrorType.ServerError,
-                statusCode: 500,
-                data: null,
-            };
-            console.log(newError);
+            const newError = createError(
+                "Error in signup handler",
+                IErrorType.ServerError,
+                500
+            );
             next(newError);
         } else {
             next(err);

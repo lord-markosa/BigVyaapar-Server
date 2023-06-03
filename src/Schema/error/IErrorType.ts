@@ -3,7 +3,8 @@ enum IErrorType {
     ServerError = "server error",
     InvalidCred = "invalid credential",
     TokenMissed = "missing token",
-    actionAuth = "action is not authorized",
+    Unauthorized = "action is not authorized",
+    NotFound = "object not found",
 }
 
 export default IErrorType;
