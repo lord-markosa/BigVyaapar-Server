@@ -1,53 +1,74 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Product from "../../models/Product";
-import IError from "../../Schema/IError";
-import IProduct from "../../Schema/IProduct";
-import IRequest from "../../Schema/IRequest";
+import IError from "../../schema/error/IError";
+import IErrorType from "../../schema/error/IErrorType";
+import IProduct from "../../schema/IProduct";
+import IRequest from "../../schema/requests/IRequest";
+import IProductResponse from "../../schema/response/product/IProductResponse";
+import Status from "../../schema/response/Status";
+import createError from "../../utils/createError";
 
 const updateProduct: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const error: IError = new Error("Validation Failed");
-            error.statusCode = 422;
-            error.data = errors.array();
-            throw error;
+            throw createError(
+                "Validation Failed",
+                IErrorType.Validation,
+                422,
+                errors.array()
+            );
         }
 
         const productId = req.params.productId;
         let product = await Product.findById(productId);
-
         if (!product) {
-            const error: IError = new Error("Cannot find product");
-            error.statusCode = 404;
-            throw error;
+            throw createError(
+                "Product with this id doesn't exists",
+                IErrorType.NotFound,
+                404
+            );
         }
 
         if (product.userId.toString() !== (req as IRequest).user.userId) {
-            const error: IError = new Error("Not authorized");
-            error.statusCode = 403;
-            throw error;
+            throw createError(
+                "User not authorized for the action",
+                IErrorType.Unauthorized,
+                403
+            );
         }
 
         const updatedProduct: IProduct = req.body;
-
         product.description = updatedProduct.description;
-        product.quantity = updatedProduct.quantity;
         product.price = updatedProduct.price;
-        product.address = updatedProduct.address;
-        product.category = updatedProduct.category;
+        product.name = updatedProduct.name;
 
         await product.save();
-        res.status(201).json({
-            message: "Product updated successfully",
-            product,
-        });
+
+        const response: IProductResponse = {
+            status: Status.Success,
+            message: " Product updated",
+            product: {
+                productId: product._id.toString(),
+                name: product.name,
+                description: product.description,
+                price: product.price,
+            },
+        };
+
+        res.status(201).json(response);
     } catch (err) {
         if (!(err as IError).statusCode) {
-            (err as IError).statusCode = 500;
+            const newError = createError(
+                "Error in update product handler",
+                IErrorType.ServerError,
+                500
+            );
+            next(newError);
+        } else {
+            next(err);
         }
-        next(err);
     }
 };
 

@@ -1,30 +1,42 @@
 import { RequestHandler } from "express";
-import IError from "../Schema/IError";
+import IError from "../schema/error/IError";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import IRequest, { CurrentUser } from "../Schema/IRequest";
+import IRequest, { CurrentUser } from "../schema/requests/IRequest";
+import { secretString } from "../constants";
+import IErrorType from "../schema/error/IErrorType";
+import createError from "../utils/createError";
+
+const authError = createError(
+    "User not authorized for the action",
+    IErrorType.Unauthorized,
+    401
+);
 
 const isAuth: RequestHandler = async (req, res, next) => {
     try {
         const token = req.get("Authorization");
         if (!token) {
-            const error: IError = new Error("Not Authorized");
-            error.statusCode = 401;
-            throw error;
+            throw createError(
+                "Token not provided",
+                IErrorType.TokenMissed,
+                401
+            );
         }
-        const decodedToken = jwt.verify(token, "secretString") as JwtPayload;
+
+        const decodedToken = jwt.verify(token, secretString) as JwtPayload;
         if (!decodedToken) {
-            const error: IError = new Error("Not Authorized");
-            error.statusCode = 401;
-            throw error;
+            throw authError;
         }
 
         (req as IRequest).user = { ...(decodedToken as CurrentUser) };
+
         next();
     } catch (err) {
         if (!(err as IError).statusCode) {
-            (err as IError).statusCode = 500;
+            throw authError;
+        } else {
+            next(err);
         }
-        next(err);
     }
 };
 

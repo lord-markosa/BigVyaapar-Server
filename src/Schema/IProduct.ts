@@ -1,12 +1,10 @@
 import { Types } from "mongoose";
-import IAddress from "./IAddress";
 
 interface IProduct {
-    category: string;
-    quantity: string;
-    price: number;
-    address: IAddress;
+    name: string;
     description: string;
+    price: number;
+    trades: Array<Types.ObjectId>;
     userId: Types.ObjectId;
 }
 
