@@ -1,22 +1,28 @@
 ## Endpoints
 
--   base/signUp
+-   base/auth/signUp
 
     -   POST
-    -   body: {phoneNumber, password, name}
-    -   registers the user
+    -   body: {phoneNumber, password, name, gstin}
+    -   registers the user and sends auth token, user name, userId
 
--   base/login
+-   base/auth/login
 
     -   POST
     -   body: {phoneNumber, password}
-    -   sends the authentication token
+    -   sends the auth token, , user name, userId
 
 -   base/product/all
 
     -   GET
     -   Headers: Authorization: token
     -   sends all the products
+
+-   base/product/:productId
+
+    -   GET
+    -   Headers: Authorization: token
+    -   sends the product details
 
 -   base/product/new
 
@@ -36,9 +42,9 @@
 
     -   DELETE
     -   Headers: AUthorization: token
-    -   deleted the product
+    -   deletes the product
 
--   base/trade/new
+-   base/trade/new/:productId
 
     -   POST
     -   Headers: Authorization: token
@@ -52,6 +58,10 @@
     -   body : {price, quantity, type, address}
     -   registers a new product
 
--   base/trade/delete
+-   base/trade/delete/:tradeId
+
+    -   DELETE
+    -   Headers: AUthorization: token
+    -   deletes the trade
 
 NOTE: base is the base url
