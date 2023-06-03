@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import IError from "../schema/error/IError";
+import IError from "../schema/IError";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import IRequest, { CurrentUser } from "../schema/requests/IRequest";
+import IRequest, { CurrentUser } from "../schema/IRequest";
 import { secretString } from "../constants";
-import IErrorType from "../schema/error/IErrorType";
+import IErrorType from "../schema/IErrorType";
 import createError from "../utils/createError";
 
 const authError = createError(

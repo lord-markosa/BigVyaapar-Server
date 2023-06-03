@@ -1,5 +1,5 @@
 import IErrorType from "./IErrorType";
-import Status from "../response/Status";
+import Status from "./Status";
 
 interface IErrorResponse {
     description: string;

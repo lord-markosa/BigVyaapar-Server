@@ -3,11 +3,11 @@ import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../../models/User";
-import IError from "../../schema/error/IError";
+import IError from "../../schema/IError";
 import { secretString } from "../../constants";
-import IAuthResponse from "../../schema/response/auth/IAuthResponse";
-import Status from "../../schema/response/Status";
-import IErrorType from "../../schema/error/IErrorType";
+import IAuthResponse from "../../schema/IAuthResponse";
+import Status from "../../schema/Status";
+import IErrorType from "../../schema/IErrorType";
 import createError from "../../utils/createError";
 
 const login: RequestHandler = async (req, res, next) => {

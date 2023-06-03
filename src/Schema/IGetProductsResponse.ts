@@ -1,4 +1,4 @@
-import Status from "../Status";
+import Status from "./Status";
 import ProductReturnType from "./ProductReturnType";
 
 interface IGetProductsResponse {

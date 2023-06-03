@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import { Types } from "mongoose";
 import Product from "../../models/Product";
-import IError from "../../schema/error/IError";
-import IErrorType from "../../schema/error/IErrorType";
+import IError from "../../schema/IError";
+import IErrorType from "../../schema/IErrorType";
 import ITrade from "../../schema/ITrade";
-import IGetProductDetailResponse from "../../schema/response/product/IGetProductDetailResponse";
-import Status from "../../schema/response/Status";
+import IGetProductDetailResponse from "../../schema/IGetProductDetailResponse";
+import Status from "../../schema/Status";
 import createError from "../../utils/createError";
 
 interface populateProduct {

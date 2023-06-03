@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Trade from "../../models/Trade";
-import IError from "../../schema/error/IError";
-import IErrorType from "../../schema/error/IErrorType";
+import IError from "../../schema/IError";
+import IErrorType from "../../schema/IErrorType";
 import ITrade from "../../schema/ITrade";
-import Status from "../../schema/response/Status";
-import ITradeResponse from "../../schema/response/trade/ITradeResponse";
+import Status from "../../schema/Status";
+import ITradeResponse from "../../schema/ITradeResponse";
 import createError from "../../utils/createError";
 
 const updateTrade: RequestHandler = async (req, res, next) => {

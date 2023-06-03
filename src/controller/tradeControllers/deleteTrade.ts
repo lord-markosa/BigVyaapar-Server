@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import Product from "../../models/Product";
 import Trade from "../../models/Trade";
-import IError from "../../schema/error/IError";
-import IErrorType from "../../schema/error/IErrorType";
-import IRequest from "../../schema/requests/IRequest";
-import IDeleteResponse from "../../schema/response/IDeleteResponse";
-import Status from "../../schema/response/Status";
+import IError from "../../schema/IError";
+import IErrorType from "../../schema/IErrorType";
+import IRequest from "../../schema/IRequest";
+import IDeleteResponse from "../../schema/IDeleteResponse";
+import Status from "../../schema/Status";
 import createError from "../../utils/createError";
 
 const deleteTrade: RequestHandler = async (req, res, next) => {

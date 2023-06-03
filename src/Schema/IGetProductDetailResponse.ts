@@ -1,5 +1,5 @@
-import Status from "../Status";
-import TradeReturnType from "../TradeReturnType";
+import Status from "./Status";
+import TradeReturnType from "./TradeReturnType";
 import ProductReturnType from "./ProductReturnType";
 
 interface IGetProductDetailResponse {

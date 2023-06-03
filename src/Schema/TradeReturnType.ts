@@ -1,5 +1,5 @@
-import IAddress from "../IAddress";
-import { TradeType } from "../ITrade";
+import IAddress from "./IAddress";
+import { TradeType } from "./ITrade";
 
 interface TradeReturnType {
     tradeId: string;

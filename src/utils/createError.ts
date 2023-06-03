@@ -1,6 +1,6 @@
-import IError from "../schema/error/IError";
-import IErrorType from "../schema/error/IErrorType";
-import Status from "../schema/response/Status";
+import IError from "../schema/IError";
+import IErrorType from "../schema/IErrorType";
+import Status from "../schema/Status";
 
 export default function createError(
     description: string,

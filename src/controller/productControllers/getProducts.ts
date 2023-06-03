@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
 import Product from "../../models/Product";
-import IError from "../../schema/error/IError";
-import IErrorType from "../../schema/error/IErrorType";
-import IGetProductsResponse from "../../schema/response/product/IGetProductsResponse";
-import Status from "../../schema/response/Status";
+import IError from "../../schema/IError";
+import IErrorType from "../../schema/IErrorType";
+import IGetProductsResponse from "../../schema/IGetProductsResponse";
+import Status from "../../schema/Status";
 import createError from "../../utils/createError";
 
 const getProducts: RequestHandler = async (req, res, next) => {

@@ -1,12 +1,12 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Product from "../../models/Product";
-import IError from "../../schema/error/IError";
-import IErrorType from "../../schema/error/IErrorType";
+import IError from "../../schema/IError";
+import IErrorType from "../../schema/IErrorType";
 import IProduct from "../../schema/IProduct";
-import IRequest from "../../schema/requests/IRequest";
-import IProductResponse from "../../schema/response/product/IProductResponse";
-import Status from "../../schema/response/Status";
+import IRequest from "../../schema/IRequest";
+import IProductResponse from "../../schema/IProductResponse";
+import Status from "../../schema/Status";
 import createError from "../../utils/createError";
 
 const updateProduct: RequestHandler = async (req, res, next) => {
